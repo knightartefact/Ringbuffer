@@ -54,7 +54,7 @@ int ringbuf_push(ringbuf_t *ringbuf, char data);
  * @param ringbuf The destination ringbuffer to push the source buffer into.
  * @param data The source character buffer.
  * @param size The size (in bytes) of the source charcter buffer.
- * @return 0 if the ringbuffer was pushed or -1 if the ringbuffer is full.
+ * @return The number of characters that have been pushed or -1 if the ringbuffer is full.
 */
 int ringbuf_push_buffer(ringbuf_t *ringbuf, char *data, size_t size);
 
@@ -71,9 +71,9 @@ int ringbuf_pop(ringbuf_t *ringbuf, char *data);
  * @param ringbuf The ringbuffer to pop the characters from.
  * @param data The destination character buffer (where popped characters go).
  * @param size The number of characters to pop from the source ringbuffer.
- * @return 0 if the character was pushed or -1 if the ringbuffer is full.
+ * @return The number of characters that have been popped or -1 if the ringbuffer is full.
 */
-int ringbuf_pop_buffer(ringbuf_t *ringbuf, char *data, size_t *size);
+int ringbuf_pop_buffer(ringbuf_t *ringbuf, char *data, size_t size);
 
 /**
  * @brief Get the size of a ringbuffer (number of elements present).

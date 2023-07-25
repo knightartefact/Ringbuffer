@@ -11,6 +11,8 @@
 
 int ringbuf_init(ringbuf_t *ringbuf, size_t capacity)
 {
+    if (capacity <= 0)
+        return -1;
     ringbuf->data = malloc(sizeof(char) * capacity);
     if (ringbuf->data == NULL) {
         perror("malloc()");
@@ -32,6 +34,7 @@ ringbuf_t *ringbuf_new(size_t capacity)
         return NULL;
     }
     if (ringbuf_init(ringbuf, capacity) == -1) {
+        free(ringbuf);
         return NULL;
     }
     return ringbuf;
