@@ -32,31 +32,26 @@ int ringbuf_pop(ringbuf_t *ringbuf, char *data)
     return 0;
 }
 
-int ringbuf_push_buffer(ringbuf_t *ringbuf, char *data, size_t size)
+int ringbuf_push_buffer(ringbuf_t *ringbuf, const char *data, size_t size)
 {
     if (ringbuf_is_full(ringbuf))
         return -1;
     for (size_t i = 0; i < size; i++) {
         if (ringbuf_push(ringbuf, data[i]) == -1)
-            return i + 1;
+            return i;
     }
     return size;
 }
 
 int ringbuf_pop_buffer(ringbuf_t *ringbuf, char *data, size_t size)
 {
-    char temp[1024] = {0};
-
-    if (ringbuf_is_full(ringbuf))
+    if (ringbuf_is_empty(ringbuf))
         return -1;
-    if ((size) >= ringbuf->size)
-        (size) = ringbuf->size;
-    for (size_t i = 0; i < (size); i++) {
-        if (ringbuf_pop(ringbuf, &temp[i]) == -1) {
-            return (i + 1);
+    for (size_t i = 0; i < size; i++) {
+        if (ringbuf_pop(ringbuf, &data[i]) == -1) {
+            return i;
         }
     }
-    memcpy(data, temp, size);
     return size;
 }
 

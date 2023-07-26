@@ -56,7 +56,7 @@ int ringbuf_push(ringbuf_t *ringbuf, char data);
  * @param size The size (in bytes) of the source charcter buffer.
  * @return The number of characters that have been pushed or -1 if the ringbuffer is full.
 */
-int ringbuf_push_buffer(ringbuf_t *ringbuf, char *data, size_t size);
+int ringbuf_push_buffer(ringbuf_t *ringbuf, const char *data, size_t size);
 
 /**
  * @brief Pop a character from the ringbuffer.
