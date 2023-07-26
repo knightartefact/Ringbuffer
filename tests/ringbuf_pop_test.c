@@ -8,7 +8,7 @@
 #include <criterion/criterion.h>
 #include "ringbuf.h"
 
-ringbuf_t *setup_ringbuf(void)
+static ringbuf_t *setup_ringbuf(void)
 {
     ringbuf_t *rb = ringbuf_new(32);
 
@@ -68,5 +68,42 @@ Test(pop, pop_multiple_chars)
     cr_expect(rb->read_index == 5);
     cr_expect(rb->write_index == 13);
     cr_expect(rb->size == 8);
+    ringbuf_destroy(rb);
+}
+
+Test(pop_buffer, pop_hello)
+{
+    ringbuf_t *rb = setup_ringbuf();
+    char data[64] = {0};
+
+    cr_assert(ringbuf_pop_buffer(rb, data, 5) == 5);
+    cr_expect_arr_eq(data, "Hello", 5);
+    cr_expect(rb->write_index == 13);
+    cr_expect(rb->read_index == 5);
+    cr_expect(rb->size == 8);
+    ringbuf_destroy(rb);
+}
+
+Test(pop_buffer, pop_empty)
+{
+    ringbuf_t *rb = ringbuf_new(32);
+    char data[64] = {0};
+
+    cr_assert(ringbuf_pop_buffer(rb, data, 5) == -1);
+    cr_expect(rb->write_index == 0);
+    cr_expect(rb->read_index == 0);
+    cr_expect(rb->size == 0);
+    ringbuf_destroy(rb);
+}
+
+Test(pop_buffer, pop_until_empty)
+{
+    ringbuf_t *rb = setup_ringbuf();
+    char data[64] = {0};
+
+    cr_assert(ringbuf_pop_buffer(rb, data, 64) == 13);
+    cr_expect(rb->write_index == 13);
+    cr_expect(rb->read_index == 13);
+    cr_expect(rb->size == 0);
     ringbuf_destroy(rb);
 }
